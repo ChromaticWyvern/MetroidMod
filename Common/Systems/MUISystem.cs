@@ -370,6 +370,7 @@ namespace MetroidMod.Common.Systems
 					"MetroidMod: Suit Energy Bar",
 					delegate {
 						DrawEnergyBar(Main.spriteBatch);
+						DrawAeionBar(Main.spriteBatch);
 						return true;
 					},
 					InterfaceScaleType.UI)
@@ -896,6 +897,29 @@ namespace MetroidMod.Common.Systems
 				{
 					sb.Draw(boxTex, center + new Vector2(-100 + (tex1.Width * i) + 8 + (4 * i), -boxTex.Height / 2), new Rectangle?(new Rectangle(0, 0, boxTex.Width / 2, boxTex.Height / 2)), i < boxCount ? mp.HUDColor : Color.DarkSlateGray, 0f, new Vector2((float)(tex1.Width / 2), (float)(tex1.Height / 2)), 1.5f, SpriteEffects.None, 0f);
 				}
+			}
+		}
+		public void DrawAeionBar(SpriteBatch sb)
+		{
+			Player P = Main.player[Main.myPlayer];
+			MPlayer mp = P.GetModPlayer<MPlayer>();
+			if (mp.ShouldShowArmorUI)
+			{
+				// bar
+				int num0 = (int)Math.Floor(mp.Aeion / 10f);
+				int num1 = num0 - (int)Math.Floor(num0 / 10f) * 10;
+				Texture2D tex1 = ModContent.Request<Texture2D>($"{Mod.Name}/Assets/Textures/EnergyTextures/{num1}").Value;
+				Vector2 center = new(Main.screenWidth / 2, tex1.Height);
+				center += new Vector2(0, 30);
+				Texture2D value = Terraria.GameContent.TextureAssets.MagicPixel.Value;
+				Rectangle rectangle = Utils.CenteredRectangle(center, new Vector2(200f, 10f));
+				Rectangle destinationRectangle = rectangle;
+				Rectangle destinationRectangle2 = rectangle;
+				destinationRectangle2.Width = (int)((float)destinationRectangle2.Width * ((mp.Aeion - (Math.Floor(mp.Aeion / 100f) * 100f)) / 99f));
+				Rectangle value2 = new Rectangle(0, 0, 1, 1);
+				sb.Draw(value, destinationRectangle, value2, Color.LightYellow * 0.6f);
+				sb.Draw(value, rectangle, value2, Color.Yellow * 0.6f);
+				sb.Draw(value, destinationRectangle2, value2, Color.LightYellow * 0.5f);
 			}
 		}
 	}
